@@ -34,9 +34,9 @@
 </header>
 
 <!-- Hero Section -->
-<section class="bg-primary py-24">
+<section class="bg-primary py-24 pb-32">
     <div class="container mx-auto text-center">
-        <h1 class="text-6xl font-bold mb-6 text-primary-foreground">Quickly Sync <br />
+        <h1 class="text-6xl font-bold mb-6 text-primary-foreground pb-10">Quickly Sync <br />
             Your Music Library Anywhere.</h1>
         <p class="text-xl text-primary-foreground mb-8 max-w-2xl mx-auto">
             Export, Move & Sync your music Library from one streaming service to another.
@@ -49,7 +49,7 @@
 </section>
 
 <!-- FAQ Section -->
-<section class="bg-primary">
+<section class="bg-primary pb-20">
     <div class="container mx-auto py-20 bg-primary">
     <h2 class="text-4xl font-bold text-center mb-16 text-primary-foreground">Frequently Asked Questions</h2>
     <Accordion.Root type="single">
