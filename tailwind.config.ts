@@ -67,7 +67,9 @@ const config: Config = {
 				sm: "calc(var(--radius) - 4px)"
 			},
 			fontFamily: {
-				sans: [...fontFamily.sans]
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+				// sans: [...fontFamily.sans],
+				'poppins': ['Poppins', 'sans-serif'],
 			},
 			keyframes: {
 				"accordion-down": {
@@ -91,6 +93,6 @@ const config: Config = {
 		},
 	},
 	plugins: [tailwindcssAnimate],
-};
+} satisfies Config;
 
 export default config;
