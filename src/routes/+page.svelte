@@ -8,24 +8,24 @@
     <div class="container mx-auto flex items-center justify-between">
         <!-- Logo -->
         <div class="flex items-center space-x-8">
-        <a href="/" class="text-primary-foreground text-2xl font-bold transition-transform hover:scale-110">
-            LIBSYNC
-        </a>
-        <!-- You can add your icon/symbol here -->
-        <div class="text-primary-foreground text-xl">✴</div>
+            <a href="/" class="text-primary-foreground text-4xl font-bold transition-transform hover:scale-110">
+                LIBSYNC
+            </a>
+            <!-- You can add your icon/symbol here -->
+            <div class="text-primary-foreground text-xl">✴</div>
         </div>
 
         <!-- Navigation Links -->
         <div class="flex items-center space-x-8">
-            <a href="/updates" class="text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-right after:scale-x-0 after:bg-white hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300">Features</a>
-            <a href="/updates" class="text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-right after:scale-x-0 after:bg-white hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300">Pricing</a>
-        <a href="/faq" class="text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-white hover:after:w-full after:transition-all after:duration-300">FAQ</a>
+            <a href="/updates" class="text-xl text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-right after:scale-x-0 after:bg-white hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300">Features</a>
+            <a href="/updates" class="text-xl text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-right after:scale-x-0 after:bg-white hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300">Pricing</a>
+        <a href="/faq" class="text-xl text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-white hover:after:w-full after:transition-all after:duration-300">FAQ</a>
         </div>
 
         <!-- Auth Buttons -->
         <div class="flex items-center space-x-4">
-        <a href="/login" class="text-primary-foreground  relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-right after:scale-x-0 after:bg-white hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300">Log in</a>
-        <a href="/get-started" class="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:scale-105 transition-transform">
+        <a href="/login" class="text-xl text-primary-foreground  relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-right after:scale-x-0 after:bg-white hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300">Log in</a>
+        <a href="/get-started" class="text-xl bg-orange-600 text-white px-4 py-2 rounded-lg hover:scale-95 hover:bg-orange-700 hover:text-white transition-transform">
         Get Started
         </a>
         </div>
@@ -42,7 +42,7 @@
             Export, Move & Sync your music Library from one streaming service to another.
         </p>
         <div class="flex justify-center gap-4">
-            <Button variant="default" size="lg" class="text-lg">Get Started Free</Button>
+            <Button variant="default" size="lg" class="text-lg bg-orange-600 hover:scale-95 hover:bg-orange-700">Get Started Free</Button>
             <Button variant="outline" size="lg" class="text-lg">Watch Demo</Button>
         </div>
     </div>
