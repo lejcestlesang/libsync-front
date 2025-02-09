@@ -5,10 +5,6 @@
 </script>
 
 <div class="w-full lg:grid lg:min-h-screen lg:grid-cols-2">
-	<!-- <dev class="absolute top-4 left-4 columns-2 flex items-center">
-		<a href="/" class="text-2xl text-black font-bold transition-transform hover:scale-110"> LIBSYNC </a>
-	</dev> -->
-
     <!-- Left container of the page -->
     <div class="min-h-screen">
 

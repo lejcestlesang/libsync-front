@@ -1,7 +1,12 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button/index.js";
     import * as Accordion from "$lib/components/ui/accordion/index.js";
-
+    import * as Card from "$lib/components/ui/card/index.js";
+    import { slide } from 'svelte/transition';
+    import * as ToggleGroup from "$lib/components/ui/toggle-group";
+    
+    let billingPeriod: 'monthly' | 'yearly' = 'monthly';
+    $: price = billingPeriod === 'monthly' ? 20 : 11.99;
    </script>
 <header>
     <nav class="bg-primary p-6">
@@ -48,8 +53,119 @@
     </div>
 </section>
 
+<!-- Pricing section -->
+<section class="bg-primary py-32">
+    <div class="container mx-auto">
+        <p class="text-gray-500 text-center">PRICING</p>
+        <h2 class="text-4xl font-bold text-center mb-16 text-primary-foreground">Choose Your Plan</h2>
+        <!-- Pricing cards container -->
+        <div class="flex justify-center gap-8">
+            <!-- Free Plan Card -->
+            <Card.Root class="w-[600px] h-[700px] bg-gray-9backdrop-blur-sm border border-primary-foreground/20">
+                <Card.Header class="space-y-4 p-10">
+                    <Card.Title class="text-6xl font-bold text-primary-foreground">FREE</Card.Title>
+                    <Card.Description class="text-xl text-primary-foreground/80">Easy to use. Simple to test. No credit card required.</Card.Description>
+                </Card.Header>
+                
+                <Card.Content class="p-10 space-y-4 ">
+                    <!-- Separator with text-->
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <span class="w-full border-t border-muted-foreground"></span>
+                        </div>
+                        <div class="relative flex justify-center text-xs uppercase">
+                            <span class="bg-primary px-2 text-muted-foreground">Includes</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 text-primary-foreground/80">
+                        <li>✓ Access to All streaming services</li>
+                        <li>✓ 500 songs Synced accross platforms</li>
+                        <li>✓ 1 Playlist sync accross platforms</li>
+                        <li>✓ Priority support</li>
+                    </ul>
+                </Card.Content>
+                <Card.Footer class="p-6">
+                    <Button variant="default" size="lg" class="w-full bg-white text-black hover:bg-white/90">
+                        Get Started
+                    </Button>
+                </Card.Footer>
+            </Card.Root>
+
+            <!-- First paid Plan Card -->
+            <Card.Root class="w-[600px] h-[700px]  bg-orange-600 border border-primary-foreground/20">
+                <Card.Header class="space-y-4 p-10">
+                    <div class="flex flex-col items-center gap-4">
+                        <!-- Price Display -->
+                        <div class="flex items-end gap-1">
+                            {#key price}
+                                <div in:slide>
+                                    <Card.Title class="text-6xl font-bold text-white">
+                                        ${price}
+                                    </Card.Title>
+                                </div>
+                            {/key}
+                            <div class="text-sm italic text-white/90 mb-2">/ month</div>
+                        </div>
+
+                        <!-- Billing Toggle -->
+                        <ToggleGroup.Root
+                            type="single"
+                            value={billingPeriod}
+                            onValueChange={(value) => {
+                                if (value === 'monthly' || value === 'yearly') {
+                                    billingPeriod = value;
+                                }
+                            }}
+                            class="bg-black/20 p-1 rounded-lg"
+                        >
+                            <ToggleGroup.Item value="monthly" class="px-4 py-2 rounded data-[state=on]:bg-white data-[state=on]:text-orange-600 text-white">
+                                Monthly
+                            </ToggleGroup.Item>
+                            <ToggleGroup.Item value="yearly" class="px-4 py-2 rounded data-[state=on]:bg-white data-[state=on]:text-orange-600 text-white">
+                                Yearly
+                            </ToggleGroup.Item>
+                        </ToggleGroup.Root>
+
+                        <!-- Savings Text -->
+                        <div class="text-white/90 text-sm">
+                            {#if billingPeriod === 'monthly'}
+                                Save 40% on yearly plan.
+                            {:else}
+                                You're saving $96 a year.
+                            {/if}
+                        </div>
+                    </div>
+                </Card.Header>
+                
+                <Card.Content class="p-10 space-y-4">
+                    <!-- Separator with text-->
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <span class="w-full border-t border-white/50"></span>
+                        </div>
+                        <div class="relative flex justify-center text-xs uppercase">
+                            <span class="bg-orange-600 px-2 text-white/50">Includes</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 text-white/90">
+                        <li>✓ Access all music streaming platforms</li>
+                        <li>✓ Unlimited songs Synced accross platforms</li>
+                        <li>✓ Unlimited Playlist sync accross platforms</li>
+                        <li>✓ Local export of your music library (.csv, .xlsx, .json)</li>
+                        <li>✓ Priority support</li>
+                    </ul>
+                </Card.Content>
+                <Card.Footer class="p-10 pt-30 mt-auto">
+                    <Button variant="secondary" size="lg" class="w-full bg-white text-orange-600 hover:bg-white/90">
+                        Become a Lifetime Member
+                    </Button>
+                </Card.Footer>
+            </Card.Root>
+        </div>
+    </div>
+</section>
 <!-- FAQ Section -->
-<section class="bg-primary pb-20">
+<section class="bg-primary pb-20 py-4">
     <div class="container mx-auto py-20 bg-primary">
     <h2 class="text-4xl font-bold text-center mb-16 text-primary-foreground">Frequently Asked Questions</h2>
     <Accordion.Root type="single">
