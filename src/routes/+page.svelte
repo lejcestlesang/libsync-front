@@ -2,10 +2,11 @@
     import { Button } from "$lib/components/ui/button/index.js";
     import * as Accordion from "$lib/components/ui/accordion/index.js";
     import * as Card from "$lib/components/ui/card/index.js";
+    import { Separator } from "$lib/components/ui/separator/index.js";
     import { slide } from 'svelte/transition';
     import * as ToggleGroup from "$lib/components/ui/toggle-group";
-    import { Hourglass, Music, HeadphoneOff } from "lucide-svelte";
-    
+    import { Hourglass, Music, HeadphoneOff, Link, ListMusic, Upload, Check } from "lucide-svelte";
+
     let billingPeriod: 'monthly' | 'yearly' = 'monthly';
     $: price = billingPeriod === 'monthly' ? 20 : 11.99;
    </script>
@@ -42,9 +43,9 @@
 <!-- Hero Section -->
 <section class="bg-primary py-24 pb-32">
     <div class="container mx-auto text-center">
-        <h1 class="text-6xl font-bold mb-6 text-primary-foreground pb-10">Quickly Sync <br />
+        <h1 class="text-8xl font-bold mb-6 text-primary-foreground pb-10 uppercase">Quickly Move <br />
             Your Music Library Anywhere.</h1>
-        <p class="text-xl text-primary-foreground mb-8 max-w-2xl mx-auto">
+        <p class="text-2xl text-primary-foreground mb-16 max-w-3xl mx-auto">
             Transfer your favorite tracks, albums, and playlists in just 3 steps. <br />
             Move & Sync from one streaming service to another.
         </p>
@@ -54,12 +55,13 @@
         </div>
     </div>
 </section>
+
 <!-- Pain Points Section -->
 <section class="bg-primary py-20">
     <div class="container mx-auto">
-        <h2 class="text-4xl font-bold text-center mb-16 text-primary-foreground">Is that you?</h2>
+        <h2 class="text-gray-500 text-center pb-10">IS THAT YOU?</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 hover:scale-105 transition-transform">
+            <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 hover:scale-105 transition-transform flex flex-col items-center text-center">
                 <div class="text-4xl mb-2">
                     <Music class="w-6 h-6 text-orange-600" />
                 </div>
@@ -68,7 +70,7 @@
                 </blockquote>
             </div>
 
-            <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 hover:scale-105 transition-transform">
+            <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 hover:scale-105 transition-transform flex flex-col items-center text-center">
                 <div class="text-4xl mb-2">
                     <Hourglass class="w-6 h-6 text-orange-600" />
                 </div>
@@ -78,7 +80,7 @@
                 </blockquote>
             </div>
 
-            <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 hover:scale-105 transition-transform">
+            <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 hover:scale-105 transition-transform flex flex-col items-center text-center">
                 <div class="text-4xl mb-2">
                     <HeadphoneOff class=" w-6 h-6 text-orange-600" />
                 </div>
@@ -93,10 +95,71 @@
 <!-- How It Works Section -->
 <section class="bg-primary py-32">
     <div class="container mx-auto">
-        <h2 class="text-4xl font-bold text-center mb-16 text-primary-foreground">How It Works</h2>
+        <h2 class="text-gray-500 text-center pb-10 uppercase">How It Works</h2>
+
+        <!-- Timeline Steps -->
+        <div class="max-w-4xl mx-auto relative">
+            <!-- Vertical Timeline Line -->
+            <div class="absolute left-[2.5rem] top-12 bottom-12 w-[1px] bg-white"></div>
+
+            <!-- Step 1 -->
+            <div class="flex items-center gap-12 mb-16 group relative">
+                <div class="w-20 h-20 rounded-full bg-primary border-2 border-white flex items-center justify-center flex-shrink-0 z-10 group-hover:scale-110 transition-transform">
+                    <span class="text-3xl font-bold text-white">1</span>
+                </div>
+                <div class="bg-gray-9 backdrop-blur-sm ml-8 p-8 flex-grow group-hover:scale-105 transition-transform">
+                    <div class="flex items-center gap-4 mb-4">
+                        <Link class="w-8 h-8 text-white" />
+                        <h3 class="text-2xl font-bold text-primary-foreground">Connect Your Source Service</h3>
+                    </div>
+                    <p class="text-primary-foreground/80">
+                        Simply connect your existing music service account. We support all major platforms including Spotify, Apple Music, and more.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="flex items-center gap-12 mb-16 group">
+                <div class="w-20 h-20 rounded-full bg-primary border-2 border-white flex items-center justify-center flex-shrink-0 z-10 group-hover:scale-110 transition-transform">
+                    <span class="text-3xl font-bold text-white">2</span>
+                </div>
+                <div class="bg-gray-9 backdrop-blur-sm ml-8 p-8 flex-grow group-hover:scale-105 transition-transform">
+                    <div class="flex items-center gap-4 mb-4">
+                        <ListMusic class="w-8 h-8 text-white" />
+                        <h3 class="text-2xl font-bold text-primary-foreground">Select Tracks & Playlists</h3>
+                    </div>
+                    <p class="text-primary-foreground/80">
+                        Choose which songs, albums, or playlists you want to transfer. Our smart selection tool makes it easy to pick exactly what you need.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="flex items-center gap-12 group">
+                <div class="w-20 h-20 rounded-full bg-primary border-2 border-orange-600 flex items-center justify-center flex-shrink-0 z-10 group-hover:scale-110 transition-transform">
+                    <span class="text-4xl font-bold text-orange-600">3</span>
+                </div>
+                <div class="bg-gray-9 backdrop-blur-sm ml-8 p-8 flex-grow group-hover:scale-105 transition-transform">
+                    <div class="flex items-center gap-4 mb-4">
+                        <Upload class="w-8 h-8 text-white" />
+                        <h3 class="text-2xl font-bold text-primary-foreground">Upload to New Service</h3>
+                    </div>
+                    <p class="text-primary-foreground/80">
+                        We'll handle the transfer process automatically. Your music will be ready in your new service in minutes.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div class="mt-16 text-center">
+            <div class="inline-flex items-center gap-2 text-primary-foreground/80">
+                <Check class="w-6 h-6 text-green-500" />
+                <span>That's it! You're ready to enjoy your music on your new platform.</span>
+            </div>
+        </div>
     </div>
 </section>
-
 
 <!-- Pricing section -->
 <section class="bg-primary py-32">
@@ -213,6 +276,7 @@
         </div>
     </div>
 </section>
+
 <!-- FAQ Section -->
 <section class="bg-primary pb-20 py-4">
     <div class="container mx-auto py-20 bg-primary">
