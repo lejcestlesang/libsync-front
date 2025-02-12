@@ -4,6 +4,7 @@
     import * as Card from "$lib/components/ui/card/index.js";
     import { slide } from 'svelte/transition';
     import * as ToggleGroup from "$lib/components/ui/toggle-group";
+    import { Hourglass, Music, HeadphoneOff } from "lucide-svelte";
     
     let billingPeriod: 'monthly' | 'yearly' = 'monthly';
     $: price = billingPeriod === 'monthly' ? 20 : 11.99;
@@ -44,14 +45,58 @@
         <h1 class="text-6xl font-bold mb-6 text-primary-foreground pb-10">Quickly Sync <br />
             Your Music Library Anywhere.</h1>
         <p class="text-xl text-primary-foreground mb-8 max-w-2xl mx-auto">
-            Export, Move & Sync your music Library from one streaming service to another.
+            Transfer your favorite tracks, albums, and playlists in just 3 steps. <br />
+            Move & Sync from one streaming service to another.
         </p>
         <div class="flex justify-center gap-4">
-            <Button variant="default" size="lg" class="text-lg bg-orange-600 hover:scale-95 hover:bg-orange-700">Get Started Free</Button>
-            <Button variant="outline" size="lg" class="text-lg">Watch Demo</Button>
+            <Button variant="default" size="lg" class="text-lg bg-orange-600 hover:scale-95 hover:bg-orange-700">Get Started For Free</Button>
+            <Button variant="outline" size="lg" class="text-lg hover:scale-95">Watch Demo</Button>
         </div>
     </div>
 </section>
+<!-- Pain Points Section -->
+<section class="bg-primary py-20">
+    <div class="container mx-auto">
+        <h2 class="text-4xl font-bold text-center mb-16 text-primary-foreground">Is that you?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 hover:scale-105 transition-transform">
+                <div class="text-4xl mb-2">
+                    <Music class="w-6 h-6 text-orange-600" />
+                </div>
+                <blockquote class="text-3xl text-primary-foreground italic">
+                    "I've built the perfect playlist... but I can't take it with me!"
+                </blockquote>
+            </div>
+
+            <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 hover:scale-105 transition-transform">
+                <div class="text-4xl mb-2">
+                    <Hourglass class="w-6 h-6 text-orange-600" />
+                </div>
+
+                <blockquote class="text-3xl text-primary-foreground italic">
+                    "Manually re-creating playlists takes forever."
+                </blockquote>
+            </div>
+
+            <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 hover:scale-105 transition-transform">
+                <div class="text-4xl mb-2">
+                    <HeadphoneOff class=" w-6 h-6 text-orange-600" />
+                </div>
+                <blockquote class="text-3xl text-primary-foreground italic">
+                    "I don't want to lose my favorite songs!"
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="bg-primary py-32">
+    <div class="container mx-auto">
+        <h2 class="text-4xl font-bold text-center mb-16 text-primary-foreground">How It Works</h2>
+    </div>
+</section>
+
 
 <!-- Pricing section -->
 <section class="bg-primary py-32">
@@ -60,8 +105,8 @@
         <h2 class="text-4xl font-bold text-center mb-16 text-primary-foreground">Choose Your Plan</h2>
         <!-- Pricing cards container -->
         <div class="flex justify-center gap-8">
-            <!-- Free Plan Card -->
-            <Card.Root class="w-[600px] h-[700px] bg-gray-9backdrop-blur-sm border border-primary-foreground/20 flex flex-col">
+            <!-- Free Plan Card --> 
+            <Card.Root class="w-[600px] h-[700px] bg-gray-9 backdrop-blur-sm border border-primary-foreground/20 flex flex-col">
                 <Card.Header class="space-y-4 p-10 flex items-center justify-center">
                     <Card.Title class="text-6xl font-bold text-primary-foreground">FREE</Card.Title>
                     <Card.Description class="text-xl text-primary-foreground/80">Easy to use. Simple to test. No credit card required.</Card.Description>
