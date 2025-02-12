@@ -61,13 +61,15 @@
         <!-- Pricing cards container -->
         <div class="flex justify-center gap-8">
             <!-- Free Plan Card -->
-            <Card.Root class="w-[600px] h-[700px] bg-gray-9backdrop-blur-sm border border-primary-foreground/20">
-                <Card.Header class="space-y-4 p-10">
+            <Card.Root class="w-[600px] h-[700px] bg-gray-9backdrop-blur-sm border border-primary-foreground/20 flex flex-col">
+                <Card.Header class="space-y-4 p-10 flex items-center justify-center">
                     <Card.Title class="text-6xl font-bold text-primary-foreground">FREE</Card.Title>
                     <Card.Description class="text-xl text-primary-foreground/80">Easy to use. Simple to test. No credit card required.</Card.Description>
+                    <div class="h-1"></div>
+
                 </Card.Header>
                 
-                <Card.Content class="p-10 space-y-4 ">
+                <Card.Content class="p-10 space-y-4 mt-auto">
                     <!-- Separator with text-->
                     <div class="relative">
                         <div class="absolute inset-0 flex items-center">
@@ -84,7 +86,7 @@
                         <li>✓ Priority support</li>
                     </ul>
                 </Card.Content>
-                <Card.Footer class="p-6">
+                <Card.Footer class="p-10 mt-auto">
                     <Button variant="default" size="lg" class="w-full bg-white text-black hover:bg-white/90">
                         Get Started
                     </Button>
@@ -92,18 +94,20 @@
             </Card.Root>
 
             <!-- First paid Plan Card -->
-            <Card.Root class="w-[600px] h-[700px]  bg-orange-600 border border-primary-foreground/20">
+            <Card.Root class="w-[600px] h-[700px]  bg-orange-600 border border-primary-foreground/20 flex flex-col">
                 <Card.Header class="space-y-4 p-10">
                     <div class="flex flex-col items-center gap-4">
                         <!-- Price Display -->
                         <div class="flex items-end gap-1">
-                            {#key price}
-                                <div in:slide>
-                                    <Card.Title class="text-6xl font-bold text-white">
-                                        ${price}
-                                    </Card.Title>
-                                </div>
-                            {/key}
+                            <div class="flex flex-col items-center gap-4 h-14">
+                                {#key price}
+                                    <div in:slide>
+                                        <Card.Title class="text-6xl font-bold text-white">
+                                            ${price}
+                                        </Card.Title>
+                                    </div>
+                                {/key}
+                            </div>
                             <div class="text-sm italic text-white/90 mb-2">/ month</div>
                         </div>
 
@@ -137,7 +141,7 @@
                     </div>
                 </Card.Header>
                 
-                <Card.Content class="p-10 space-y-4">
+                <Card.Content class="p-10 space-y-4 mt-auto ">
                     <!-- Separator with text-->
                     <div class="relative">
                         <div class="absolute inset-0 flex items-center">
@@ -155,9 +159,9 @@
                         <li>✓ Priority support</li>
                     </ul>
                 </Card.Content>
-                <Card.Footer class="p-10 pt-30 mt-auto">
+                <Card.Footer class="p-10 mt-auto">
                     <Button variant="secondary" size="lg" class="w-full bg-white text-orange-600 hover:bg-white/90">
-                        Become a Lifetime Member
+                        Become a Supporter
                     </Button>
                 </Card.Footer>
             </Card.Root>
