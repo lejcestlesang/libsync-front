@@ -92,6 +92,9 @@
     </div>
 </section>
 
+<!-- Features Section -->
+ <!-- TODO this secion should explain the features of the app - (bonus add screen of the app) -->
+
 <!-- How It Works Section -->
 <section id="How-it-works" class="bg-primary py-32">
     <div class="container mx-auto">
@@ -313,14 +316,14 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
                 <h3 class="text-xl font-bold mb-4">LibSync</h3>
-                <p class="text-primary-foreground/80">Your music companion, everywhere you go.</p>
+                <p class="text-primary-foreground/80">Share your music.</p>
             </div>
             <div>
                 <h4 class="font-semibold mb-4">Product</h4>
                 <ul class="space-y-2">
-                    <li><a href="/features" class="hover:underline">Features</a></li>
-                    <li><a href="/pricing" class="hover:underline">Pricing</a></li>
-                    <li><a href="/faq" class="hover:underline">FAQ</a></li>
+                    <li><a href="#How-it-works" class="hover:underline">Features</a></li>
+                    <li><a href="#Pricing" class="hover:underline">Pricing</a></li>
+                    <li><a href="#faq" class="hover:underline">FAQ</a></li>
                 </ul>
             </div>
             <div>
