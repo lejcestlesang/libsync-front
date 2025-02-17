@@ -24,9 +24,9 @@
 
         <!-- Navigation Links -->
         <div class="flex items-center space-x-8">
-            <a href="/updates" class="text-xl text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-right after:scale-x-0 after:bg-white hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300">Features</a>
-            <a href="/updates" class="text-xl text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-right after:scale-x-0 after:bg-white hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300">Pricing</a>
-        <a href="/faq" class="text-xl text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-white hover:after:w-full after:transition-all after:duration-300">FAQ</a>
+            <a href="#How-it-works" class="text-xl text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-right after:scale-x-0 after:bg-white hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300">Features</a>
+            <a href="#Pricing" class="text-xl text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-right after:scale-x-0 after:bg-white hover:after:origin-left hover:after:scale-x-100 after:transition-transform after:duration-300">Pricing</a>
+            <a href="#faq" class="text-xl text-primary-foreground relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-white hover:after:w-full after:transition-all after:duration-300">FAQ</a>
         </div>
 
         <!-- Auth Buttons -->
@@ -45,7 +45,7 @@
     <div class="container mx-auto text-center">
         <h1 class="text-8xl font-bold mb-6 text-primary-foreground pb-10 uppercase">Quickly Move <br />
             Your Music Library Anywhere.</h1>
-        <p class="text-2xl text-primary-foreground mb-16 max-w-3xl mx-auto">
+        <p class="text-2xl text-primary-foreground/70 mb-16 max-w-3xl mx-auto">
             Transfer your favorite tracks, albums, and playlists in just 3 steps. <br />
             Move & Sync from one streaming service to another.
         </p>
@@ -93,12 +93,12 @@
 </section>
 
 <!-- How It Works Section -->
-<section class="bg-primary py-32">
+<section id="How-it-works" class="bg-primary py-32">
     <div class="container mx-auto">
         <h2 class="text-gray-500 text-center pb-10 uppercase">How It Works</h2>
 
         <!-- Timeline Steps -->
-        <div class="max-w-4xl mx-auto relative">
+        <div class="max-w-5xl mx-auto relative">
             <!-- Vertical Timeline Line -->
             <div class="absolute left-[2.5rem] top-12 bottom-12 w-[1px] bg-white"></div>
 
@@ -106,13 +106,14 @@
             <div class="flex items-center gap-12 mb-16 group relative">
                 <div class="w-20 h-20 rounded-full bg-primary border-2 border-white flex items-center justify-center flex-shrink-0 z-10 group-hover:scale-110 transition-transform">
                     <span class="text-3xl font-bold text-white">1</span>
+                    <!-- <Link class="w-12 h-12 text-white" /> -->
                 </div>
                 <div class="bg-gray-9 backdrop-blur-sm ml-8 p-8 flex-grow group-hover:scale-105 transition-transform">
                     <div class="flex items-center gap-4 mb-4">
-                        <Link class="w-8 h-8 text-white" />
-                        <h3 class="text-2xl font-bold text-primary-foreground">Connect Your Source Service</h3>
+                        <Link class="w-12 h-12 text-white" />
+                        <h3 class="text-5xl font-bold text-primary-foreground">Connect Your Source Service</h3>
                     </div>
-                    <p class="text-primary-foreground/80">
+                    <p class="text-primary-foreground/60">
                         Simply connect your existing music service account. We support all major platforms including Spotify, Apple Music, and more.
                     </p>
                 </div>
@@ -125,10 +126,10 @@
                 </div>
                 <div class="bg-gray-9 backdrop-blur-sm ml-8 p-8 flex-grow group-hover:scale-105 transition-transform">
                     <div class="flex items-center gap-4 mb-4">
-                        <ListMusic class="w-8 h-8 text-white" />
-                        <h3 class="text-2xl font-bold text-primary-foreground">Select Tracks & Playlists</h3>
+                        <ListMusic class="w-12 h-12 text-white" />
+                        <h3 class="text-5xl font-bold text-primary-foreground">Select Tracks & Playlists</h3>
                     </div>
-                    <p class="text-primary-foreground/80">
+                    <p class="text-primary-foreground/60">
                         Choose which songs, albums, or playlists you want to transfer. Our smart selection tool makes it easy to pick exactly what you need.
                     </p>
                 </div>
@@ -136,17 +137,19 @@
 
             <!-- Step 3 -->
             <div class="flex items-center gap-12 group">
-                <div class="w-20 h-20 rounded-full bg-primary border-2 border-orange-600 flex items-center justify-center flex-shrink-0 z-10 group-hover:scale-110 transition-transform">
+                <div class="w-20 h-20 rounded-full bg-primary border-4 border-orange-600 flex items-center justify-center flex-shrink-0 z-10 group-hover:scale-110 transition-transform">
                     <span class="text-4xl font-bold text-orange-600">3</span>
                 </div>
                 <div class="bg-gray-9 backdrop-blur-sm ml-8 p-8 flex-grow group-hover:scale-105 transition-transform">
-                    <div class="flex items-center gap-4 mb-4">
-                        <Upload class="w-8 h-8 text-white" />
-                        <h3 class="text-2xl font-bold text-primary-foreground">Upload to New Service</h3>
+                    <div class="flex items-start gap-4">
+                        <Upload class="w-12 h-12 text-white rounded-md p-1" />
+                        <div>
+                            <h3 class="text-5xl font-bold text-primary-foreground mb-4">Upload to New Service</h3>
+                            <p class="text-primary-foreground/60">
+                                We'll handle the transfer process automatically. Your music will be ready in your new service in minutes.
+                            </p>
+                        </div>
                     </div>
-                    <p class="text-primary-foreground/80">
-                        We'll handle the transfer process automatically. Your music will be ready in your new service in minutes.
-                    </p>
                 </div>
             </div>
         </div>
@@ -162,7 +165,7 @@
 </section>
 
 <!-- Pricing section -->
-<section class="bg-primary py-32">
+<section id="Pricing" class="bg-primary py-32">
     <div class="container mx-auto">
         <p class="text-gray-500 text-center">PRICING</p>
         <h2 class="text-4xl font-bold text-center mb-16 text-primary-foreground">Choose Your Plan</h2>
@@ -278,7 +281,7 @@
 </section>
 
 <!-- FAQ Section -->
-<section class="bg-primary pb-20 py-4">
+<section id="faq" class="bg-primary pb-20 py-4">
     <div class="container mx-auto py-20 bg-primary">
     <h2 class="text-4xl font-bold text-center mb-16 text-primary-foreground">Frequently Asked Questions</h2>
     <Accordion.Root type="single">
