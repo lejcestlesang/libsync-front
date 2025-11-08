@@ -2,6 +2,18 @@
 
 ![Homepage Screenshot](images/homepage-desktop.png)
 
+## Frontend Dev workflow
+List of dependencies form an empty linux machine
+1. Install nvm
+2. Install npm 
+3. git clone the repo
+4. install package dependencies
+5. run locally
+
+
+-----
+
+
 # sv
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
