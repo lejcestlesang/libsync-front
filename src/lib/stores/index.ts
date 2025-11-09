@@ -1,0 +1,1 @@
+export { spotifyAuth } from './spotifyAuth';

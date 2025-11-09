@@ -6,7 +6,77 @@
     import { slide } from 'svelte/transition';
     import * as ToggleGroup from "$lib/components/ui/toggle-group";
     import { Hourglass, Music, HeadphoneOff, Link, ListMusic, Upload, Check } from "lucide-svelte";
+    import { openSpotifyAuth, openDeezerAuth } from '$lib/auth';
+    import { spotifyAuth } from '$lib/stores';
+    import spotifyIcon from '$lib/assets/icons/spotify_logo_with_name.svg';
+    import deezerIcon from '$lib/assets/icons/deezer_logo_with_name.svg';
+    import appleIcon from '$lib/assets/icons/applemusic_logo_with_name.svg';
+    import { AuthButton } from '$lib';
+    import { env } from '$env/dynamic/public';
+    import { onMount, onDestroy } from 'svelte';
 
+
+    let messageHandler: (event: MessageEvent) => void;
+    
+    onMount(() => {
+        // Set up message listener for popup
+        messageHandler = (event: MessageEvent) => {
+        spotifyAuth.handleAuthMessage(event);
+        };
+        
+        window.addEventListener('message', messageHandler);
+    });
+    
+    onDestroy(() => {
+        // Cleanup listener
+        if (messageHandler) {
+        window.removeEventListener('message', messageHandler);
+        }
+    });
+
+    async function handleSpotifyLogin() {
+        try {
+        await openSpotifyAuth({
+            clientId: env.PUBLIC_SPOTIFY_CLIENT_ID,
+            redirectUri: env.PUBLIC_SPOTIFY_REDIRECT_URI,
+            scopes: [
+                'user-read-private',
+                'user-read-email',
+                'playlist-modify-public',
+                'playlist-modify-private',
+                'playlist-read-private',
+                'user-library-modify',
+                'user-library-read'
+            ]
+        });
+        } catch (error) {
+        console.error('Login failed:', error);
+        }
+    }
+    // function handleSpotifyLogin() {
+    //     openSpotifyAuth({
+    //     clientId: env.PUBLIC_SPOTIFY_CLIENT_ID,
+    //     redirectUri: 'http://localhost:5173/callback',
+    //     scopes: [
+    //             'user-read-private',
+    //             'user-read-email',
+    //             'playlist-modify-public',
+    //             'playlist-modify-private',
+    //             'playlist-read-private',
+    //             'user-library-modify',
+    //             'user-library-read'
+    //         ]
+    //     });
+    // }
+  
+    function handleDeezerLogin() {
+        openDeezerAuth({
+        appId: 'YOUR_DEEZER_APP_ID',
+        redirectUri: 'http://localhost:5173/callback',
+        perms: ['basic_access', 'email']
+        });
+    }
+    
     let billingPeriod: 'monthly' | 'yearly' = 'monthly';
     $: price = billingPeriod === 'monthly' ? 20 : 11.99;
    </script>
@@ -56,6 +126,57 @@
     </div>
 </section>
 
+<section id="transfer-connect-source" class="bg-primary py-32">
+    <div class="auth-container">
+        <h1 class="text-2xl font-bold mb-6 text-primary-foreground pb-10 uppercase">Connect your source system</h1>
+        <div class="auth-buttons">
+            <AuthButton 
+                icon={spotifyIcon} 
+                label="Spotify Connection" 
+                onClick={handleSpotifyLogin} 
+            />
+            <AuthButton 
+                icon={deezerIcon} 
+                label="Deezer Connection" 
+                onClick={handleDeezerLogin} 
+            />
+            <AuthButton 
+                icon={appleIcon} 
+                label="Apple Music Connection" 
+                onClick={handleSpotifyLogin} 
+            />
+        </div>
+    </div>
+</section>
+
+
+<div class="container">
+  
+  {#if $spotifyAuth.isLoading}
+    <p>Loading...</p>
+  {/if}
+  
+  {#if $spotifyAuth.error}
+    <div class="error">
+      <p>Error: {$spotifyAuth.error}</p>
+      <button on:click={spotifyAuth.clearError}>Dismiss</button>
+    </div>
+  {/if}
+  
+  {#if $spotifyAuth.isAuthenticated && $spotifyAuth.user}
+    <div class="user-info">
+      <p>Welcome, {$spotifyAuth.user.display_name}!</p>
+      <p>Email: {$spotifyAuth.user.email}</p>
+      <button on:click={spotifyAuth.logout}>Logout</button>
+    </div>
+  {:else}
+    <button on:click={handleSpotifyLogin}>
+      Login with Spotify
+    </button>
+  {/if}
+</div>
+
+
 <!-- Pain Points Section -->
 <section class="bg-primary py-20">
     <div class="container mx-auto">
@@ -91,9 +212,6 @@
         </div>
     </div>
 </section>
-
-<!-- Features Section -->
- <!-- TODO this secion should explain the features of the app - (bonus add screen of the app) -->
 
 <!-- How It Works Section -->
 <section id="How-it-works" class="bg-primary py-32">
@@ -346,3 +464,20 @@
         </div>
     </div>
 </footer>
+
+<style>
+  .auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* min-height: 100vh; */
+  }
+  
+  .auth-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+</style>
