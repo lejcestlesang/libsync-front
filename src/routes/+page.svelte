@@ -2,7 +2,6 @@
     import { Button } from "$lib/components/ui/button/index.js";
     import * as Accordion from "$lib/components/ui/accordion/index.js";
     import * as Card from "$lib/components/ui/card/index.js";
-    import { Separator } from "$lib/components/ui/separator/index.js";
     import { slide } from 'svelte/transition';
     import * as ToggleGroup from "$lib/components/ui/toggle-group";
     import { Hourglass, Music, HeadphoneOff, Link, ListMusic, Upload, Check } from "lucide-svelte";
@@ -16,18 +15,36 @@
     import { onMount, onDestroy } from 'svelte';
 
 
-    let messageHandler: (event: MessageEvent) => void;
-    
-    onMount(() => {
-        // Set up message listener for popup
+    let messageHandler: ((event: MessageEvent) => void) | null = null;
+     // Set up the message listener BEFORE onMount to ensure it's ready
+    if (typeof window !== 'undefined') {
         messageHandler = (event: MessageEvent) => {
+        console.log('📨 Message event triggered!');
+        console.log('📨 Event origin:', event.origin);
+        console.log('📨 Window origin:', window.location.origin);
+        console.log('📨 Message data:', event.data);
+        console.log('📨 Message type:', event.data?.type);
+        
+        // Call the store's handler
         spotifyAuth.handleAuthMessage(event);
         };
         
+        // Add listener immediately
         window.addEventListener('message', messageHandler);
+        console.log('✅ Message listener added early');
+    }
+
+    onMount(() => {
+        console.log('🎯 Main page mounted');
+        
+        // If user has saved token, fetch their profile on mount
+        if ($spotifyAuth.accessToken && !$spotifyAuth.user) {
+            spotifyAuth.fetchUserProfile($spotifyAuth.accessToken);
+        }
     });
     
-    onDestroy(() => {
+    
+    onDestroy(() => { 
         // Cleanup listener
         if (messageHandler) {
         window.removeEventListener('message', messageHandler);
@@ -36,22 +53,25 @@
 
     async function handleSpotifyLogin() {
         try {
-        await openSpotifyAuth({
-            clientId: env.PUBLIC_SPOTIFY_CLIENT_ID,
-            redirectUri: env.PUBLIC_SPOTIFY_REDIRECT_URI,
-            scopes: [
-                'user-read-private',
-                'user-read-email',
-                'playlist-modify-public',
-                'playlist-modify-private',
-                'playlist-read-private',
-                'user-library-modify',
-                'user-library-read'
-            ]
-        });
+            await openSpotifyAuth({
+                clientId: env.PUBLIC_SPOTIFY_CLIENT_ID,
+                redirectUri: env.PUBLIC_SPOTIFY_REDIRECT_URI,
+                scopes: [
+                    'user-read-private',
+                    'user-read-email',
+                    'playlist-modify-public',
+                    'playlist-modify-private',
+                    'playlist-read-private',
+                    'user-library-modify',
+                    'user-library-read'
+                ]
+            });
         } catch (error) {
-        console.error('Login failed:', error);
+            console.error('Login failed:', error);
         }
+    }
+    function handleLogout(){
+        spotifyAuth.logout();
     }
     // function handleSpotifyLogin() {
     //     openSpotifyAuth({
@@ -176,6 +196,65 @@
   {/if}
 </div>
 
+<div class="container">
+  <h1>Welcome to LibSync</h1>
+  
+  <!-- Loading State -->
+  {#if $spotifyAuth.isLoading}
+    <div class="loading">
+      <p>Loading...</p>
+    </div>
+  {/if}
+  
+  <!-- Error State -->
+  {#if $spotifyAuth.error}
+    <div class="error">
+      <p>❌ Error: {$spotifyAuth.error}</p>
+      <button on:click={spotifyAuth.clearError}>Dismiss</button>
+    </div>
+  {/if}
+  
+  <!-- Authenticated State - Display User Info -->
+  {#if $spotifyAuth.isAuthenticated && $spotifyAuth.user}
+    <div class="user-card">
+      <h2>✅ Authentication Successful!</h2>
+      
+      {#if $spotifyAuth.user.images && $spotifyAuth.user.images[0]}
+        <img 
+          src={$spotifyAuth.user.images[0].url} 
+          alt={$spotifyAuth.user.display_name}
+          class="user-avatar"
+        />
+      {/if}
+      
+      <div class="user-info">
+        <p><strong>Name:</strong> {$spotifyAuth.user.display_name}</p>
+        <p><strong>Email:</strong> {$spotifyAuth.user.email}</p>
+        <p><strong>Spotify ID:</strong> {$spotifyAuth.user.id}</p>
+      </div>
+      
+      <div class="token-info">
+        <p><strong>Access Token:</strong> <code>{$spotifyAuth.accessToken?.substring(0, 20)}...</code></p>
+        {#if $spotifyAuth.refreshToken}
+          <p><strong>Refresh Token:</strong> <code>{$spotifyAuth.refreshToken.substring(0, 20)}...</code></p>
+        {/if}
+      </div>
+      
+      <button class="logout-btn" on:click={handleLogout}>
+        Logout from Spotify
+      </button>
+    </div>
+  {:else}
+    <!-- Not Authenticated - Show Login Button -->
+    <div class="auth-section">
+      <p>Connect your Spotify account to get started</p>
+      <button class="auth-btn" on:click={handleSpotifyLogin}>
+        <span>🎵</span>
+        Login with Spotify
+      </button>
+    </div>
+  {/if}
+</div>
 
 <!-- Pain Points Section -->
 <section class="bg-primary py-20">

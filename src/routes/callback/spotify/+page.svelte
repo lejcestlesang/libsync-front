@@ -1,54 +1,52 @@
-<!-- src/routes/callback/spotify/+page.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
   
   let status = 'Processing...';
   
   onMount(async () => {
+    console.log('🔄 Callback page loaded');
+    
     try {
       // Get authorization code from URL
       const params = new URLSearchParams(window.location.search);
       const code = params.get('code');
       const state = params.get('state');
       
-      // Verify state
-      const storedState = sessionStorage.getItem('spotify_auth_state');
-      if (state !== storedState) {
-        throw new Error('State mismatch - possible CSRF attack');
-      }
+      console.log('📝 Code from URL:', code?.substring(0, 20) + '...');
+      console.log('📝 State from URL:', state);
       
       if (!code) {
         throw new Error('No authorization code received');
       }
       
-      // Get stored code verifier
-      const codeVerifier = sessionStorage.getItem('spotify_code_verifier');
-      if (!codeVerifier) {
-        throw new Error('Code verifier not found');
-      }
-      
-      // If in popup, send code to parent
-      if (window.opener) {
+      // Check if we're in a popup window
+      if (window.opener && !window.opener.closed) {
+        console.log('✅ Parent window detected, sending message...');
+        
+        // Send message to parent window
         window.opener.postMessage({
           type: 'spotify_auth_success',
           code,
-          codeVerifier
+          returnedState: state
         }, window.location.origin);
         
+        console.log('✅ Message sent to parent window');
+        
         status = 'Authentication successful! Closing...';
-        setTimeout(() => window.close(), 1000);
+        setTimeout(() => {
+          console.log('🔒 Closing popup window');
+          window.close();
+        }, 10000);
       } else {
-        // If not popup, exchange token directly and redirect
-        await exchangeToken(code, codeVerifier);
-        goto('/dashboard');
+        console.warn('⚠️ No parent window found or parent is closed');
+        status = 'Please close this window and try again from the main page';
       }
       
-    } catch (error) {
-      console.error('Auth error:', error);
+    } catch (error: any) {
+      console.error('❌ Auth error:', error);
       status = `Error: ${error.message}`;
       
-      if (window.opener) {
+      if (window.opener && !window.opener.closed) {
         window.opener.postMessage({
           type: 'spotify_auth_error',
           error: error.message
@@ -57,35 +55,25 @@
       }
     }
   });
-  
-  async function exchangeToken(code: string, codeVerifier: string) {
-    // This would call your backend API route
-    const response = await fetch('/api/spotify/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, codeVerifier })
-    });
-    
-    if (!response.ok) {
-      throw new Error('Token exchange failed');
-    }
-    
-    const data = await response.json();
-    localStorage.setItem('spotify_token', data.access_token);
-    localStorage.setItem('spotify_refresh_token', data.refresh_token);
-  }
 </script>
 
 <div class="loading">
+  <h2>Spotify Authentication</h2>
   <p>{status}</p>
 </div>
 
 <style>
   .loading {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     text-align: center;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  
+  h2 {
+    color: #1db954;
   }
 </style>
