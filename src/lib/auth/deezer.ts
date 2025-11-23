@@ -11,12 +11,15 @@ export function openDeezerAuth(config: DeezerAuthConfig): void {
   authUrl.searchParams.append('app_id', appId);
   authUrl.searchParams.append('redirect_uri', redirectUri);
   authUrl.searchParams.append('perms', perms.join(','));
-  authUrl.searchParams.append('response_type', 'token');
   
-  // Open popup window
-  window.open(
+  // Open popup
+  const popup = window.open(
     authUrl.toString(),
-    'Deezer Authorization',
+    'Deezer Login',
     'width=600,height=800,left=200,top=100'
   );
+  
+  if (!popup) {
+    throw new Error('Popup blocked');
+  }
 }

@@ -6,7 +6,7 @@
     import * as ToggleGroup from "$lib/components/ui/toggle-group";
     import { Hourglass, Music, HeadphoneOff, Link, ListMusic, Upload, Check } from "lucide-svelte";
     import { openSpotifyAuth, openDeezerAuth } from '$lib/auth';
-    import { spotifyAuth } from '$lib/stores';
+    import { spotifyAuth, deezerAuth } from '$lib/stores';
     import spotifyIcon from '$lib/assets/icons/spotify_logo_with_name.svg';
     import deezerIcon from '$lib/assets/icons/deezer_logo_with_name.svg';
     import appleIcon from '$lib/assets/icons/applemusic_logo_with_name.svg';
@@ -25,8 +25,12 @@
         console.log('📨 Message data:', event.data);
         console.log('📨 Message type:', event.data?.type);
         
-        // Call the store's handler
-        spotifyAuth.handleAuthMessage(event);
+        // Route to appropriate handler based on message type
+        if (event.data?.type?.startsWith('spotify_')) {
+            spotifyAuth.handleAuthMessage(event);
+        } else if (event.data?.type?.startsWith('deezer_')) {
+            deezerAuth.handleAuthMessage(event);
+        }
         };
         
         // Add listener immediately
@@ -37,9 +41,14 @@
     onMount(() => {
         console.log('🎯 Main page mounted');
         
-        // If user has saved token, fetch their profile on mount
+        // If user has saved Spotify token, fetch their profile on mount
         if ($spotifyAuth.accessToken && !$spotifyAuth.user) {
             spotifyAuth.fetchUserProfile($spotifyAuth.accessToken);
+        }
+        
+        // If user has saved Deezer token, fetch their profile on mount
+        if ($deezerAuth.accessToken && !$deezerAuth.user) {
+            deezerAuth.fetchUserProfile($deezerAuth.accessToken);
         }
     });
     
@@ -70,31 +79,30 @@
             console.error('Login failed:', error);
         }
     }
-    function handleLogout(){
+    function handleSpotifyLogout(){
         spotifyAuth.logout();
     }
-    // function handleSpotifyLogin() {
-    //     openSpotifyAuth({
-    //     clientId: env.PUBLIC_SPOTIFY_CLIENT_ID,
-    //     redirectUri: 'http://localhost:5173/callback',
-    //     scopes: [
-    //             'user-read-private',
-    //             'user-read-email',
-    //             'playlist-modify-public',
-    //             'playlist-modify-private',
-    //             'playlist-read-private',
-    //             'user-library-modify',
-    //             'user-library-read'
-    //         ]
-    //     });
-    // }
   
-    function handleDeezerLogin() {
-        openDeezerAuth({
-        appId: 'YOUR_DEEZER_APP_ID',
-        redirectUri: 'http://localhost:5173/callback',
-        perms: ['basic_access', 'email']
-        });
+    async function handleDeezerLogin() {
+        try {
+            await openDeezerAuth({
+                appId: env.PUBLIC_DEEZER_APP_ID || '',
+                redirectUri: env.PUBLIC_DEEZER_REDIRECT_URI || 'http://localhost:5173/callback/deezer',
+                perms: [
+                    'basic_access',
+                    'email',
+                    'manage_library',
+                    'delete_library',
+                    'offline_access'
+                ]
+            });
+        } catch (error) {
+            console.error('Deezer login failed:', error);
+        }
+    }
+    
+    function handleDeezerLogout(){
+        deezerAuth.logout();
     }
     
     let billingPeriod: 'monthly' | 'yearly' = 'monthly';
@@ -169,63 +177,126 @@
     </div>
 </section>
 
-<!-- Spotify Auth Status Section -->
+<!-- Auth Status Section -->
 <section class="bg-primary py-12">
   <div class="container mx-auto">
-    {#if $spotifyAuth.isLoading}
-      <div class="text-center">
-        <p class="text-primary-foreground text-xl">Loading...</p>
-      </div>
-    {/if}
-    
-    {#if $spotifyAuth.error}
-      <div class="bg-red-500/20 border border-red-500 rounded-lg p-4 text-center">
-        <p class="text-red-300 text-xl mb-4">❌ Error: {$spotifyAuth.error}</p>
-        <button 
-          on:click={spotifyAuth.clearError}
-          class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Dismiss
-        </button>
-      </div>
-    {/if}
-    
-    {#if $spotifyAuth.isAuthenticated && $spotifyAuth.user}
-      <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 max-w-2xl mx-auto">
-        <h2 class="text-3xl font-bold text-primary-foreground mb-6 text-center">
-          ✅ Authentication Successful!
-        </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Spotify Auth Status -->
+      <div>
+        <h3 class="text-2xl font-bold text-primary-foreground mb-4 text-center">Spotify</h3>
         
-        <div class="flex flex-col items-center gap-6">
-          {#if $spotifyAuth.user.images && $spotifyAuth.user.images[0]}
-            <img 
-              src={$spotifyAuth.user.images[0].url} 
-              alt={$spotifyAuth.user.display_name}
-              class="w-32 h-32 rounded-full border-4 border-orange-600"
-            />
-          {/if}
-          
-          <div class="text-center space-y-2">
-            <p class="text-2xl font-bold text-primary-foreground">
-              Welcome, {$spotifyAuth.user.display_name}!
-            </p>
-            <p class="text-xl text-primary-foreground/80">
-              📧 {$spotifyAuth.user.email}
-            </p>
-            <p class="text-sm text-primary-foreground/60">
-              Spotify ID: {$spotifyAuth.user.id}
-            </p>
+        {#if $spotifyAuth.isLoading}
+          <div class="text-center">
+            <p class="text-primary-foreground text-xl">Loading...</p>
           </div>
-          
-          <button 
-            class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg transition-transform hover:scale-95"
-            on:click={handleLogout}
-          >
-            Logout from Spotify
-          </button>
-        </div>
+        {/if}
+        
+        {#if $spotifyAuth.error}
+          <div class="bg-red-500/20 border border-red-500 rounded-lg p-4 text-center">
+            <p class="text-red-300 mb-4">❌ {$spotifyAuth.error}</p>
+            <button 
+              on:click={spotifyAuth.clearError}
+              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+            >
+              Dismiss
+            </button>
+          </div>
+        {/if}
+        
+        {#if $spotifyAuth.isAuthenticated && $spotifyAuth.user}
+          <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-6">
+            <div class="flex flex-col items-center gap-4">
+              {#if $spotifyAuth.user.images && $spotifyAuth.user.images[0]}
+                <img 
+                  src={$spotifyAuth.user.images[0].url} 
+                  alt={$spotifyAuth.user.display_name}
+                  class="w-24 h-24 rounded-full border-4 border-green-500"
+                />
+              {/if}
+              
+              <div class="text-center space-y-2">
+                <p class="text-xl font-bold text-primary-foreground">
+                  {$spotifyAuth.user.display_name}
+                </p>
+                <p class="text-sm text-primary-foreground/80">
+                  📧 {$spotifyAuth.user.email}
+                </p>
+              </div>
+              
+              <button 
+                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-transform hover:scale-95"
+                on:click={handleSpotifyLogout}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        {:else if !$spotifyAuth.isLoading}
+          <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-6 text-center">
+            <p class="text-primary-foreground/60 mb-4">Not connected</p>
+          </div>
+        {/if}
       </div>
-    {/if}
+      
+      <!-- Deezer Auth Status -->
+      <div>
+        <h3 class="text-2xl font-bold text-primary-foreground mb-4 text-center">Deezer</h3>
+        
+        {#if $deezerAuth.isLoading}
+          <div class="text-center">
+            <p class="text-primary-foreground text-xl">Loading...</p>
+          </div>
+        {/if}
+        
+        {#if $deezerAuth.error}
+          <div class="bg-red-500/20 border border-red-500 rounded-lg p-4 text-center">
+            <p class="text-red-300 mb-4">❌ {$deezerAuth.error}</p>
+            <button 
+              on:click={deezerAuth.clearError}
+              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+            >
+              Dismiss
+            </button>
+          </div>
+        {/if}
+        
+        {#if $deezerAuth.isAuthenticated && $deezerAuth.user}
+          <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-6">
+            <div class="flex flex-col items-center gap-4">
+              {#if $deezerAuth.user.picture_medium}
+                <img 
+                  src={$deezerAuth.user.picture_medium} 
+                  alt={$deezerAuth.user.name}
+                  class="w-24 h-24 rounded-full border-4 border-pink-500"
+                />
+              {/if}
+              
+              <div class="text-center space-y-2">
+                <p class="text-xl font-bold text-primary-foreground">
+                  {$deezerAuth.user.name}
+                </p>
+                <p class="text-sm text-primary-foreground/80">
+                  📧 {$deezerAuth.user.email}
+                </p>
+              </div>
+              
+              <button 
+                class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-transform hover:scale-95"
+                on:click={handleDeezerLogout}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        {:else if !$deezerAuth.isLoading}
+          <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-6 text-center">
+            <p class="text-primary-foreground/60 mb-4">Not connected</p>
+          </div>
+        {/if}
+      </div>
+      
+    </div>
   </div>
 </section>
 
