@@ -5,6 +5,8 @@ interface SpotifyUser {
   email: string;
   id: string;
   images?: Array<{ url: string }>;
+  country?: string;
+  product?: string;
 }
 
 interface SpotifyAuthState {
@@ -49,7 +51,7 @@ function createSpotifyAuthStore() {
   return {
     subscribe,
     
-    // Fetch user profile
+    // Fetch user profile (only needed if token restored from localStorage)
     fetchUserProfile: async (accessToken: string) => {
       console.log('📡 Fetching user profile with token:', accessToken.substring(0, 20) + '...');
       update(state => ({ ...state, isLoading: true, error: null }));
@@ -91,9 +93,9 @@ function createSpotifyAuthStore() {
     handleAuthMessage: async (event: MessageEvent) => {
       console.log('📨 Received message:', event.data);
       
-      // Verify origin for security
+      // Verify origin for security - must match current window origin
       if (event.origin !== window.location.origin) {
-        console.warn('⚠️ Message from different origin, ignoring:', event.origin);
+        console.warn('⚠️ Message from untrusted origin, ignoring:', event.origin, 'expected:', window.location.origin);
         return;
       }
       
@@ -140,7 +142,7 @@ function createSpotifyAuthStore() {
         try {
           console.log('🔄 Exchanging code for tokens...');
           
-          // Exchange code for token
+          // Exchange code for token via SvelteKit API route
           const response = await fetch('/api/spotify/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -155,43 +157,44 @@ function createSpotifyAuthStore() {
             throw new Error(`Token exchange failed: ${response.status}`);
           }
           
-          const tokenData = await response.json();
+          const data = await response.json();
           console.log('✅ Token exchange successful');
-          console.log('📝 Access token received:', tokenData.access_token?.substring(0, 20) + '...');
-          console.log('📝 Refresh token received:', tokenData.refresh_token ? 'Yes' : 'No');
+          console.log('📝 Access token received:', data.access_token?.substring(0, 20) + '...');
+          console.log('📝 Refresh token received:', data.refresh_token ? 'Yes' : 'No');
+          console.log('👤 User data received:', data.user?.display_name);
+          console.log('📧 User email:', data.user?.email);
           
           // Store tokens in localStorage
           try {
-            localStorage.setItem('spotify_token', tokenData.access_token);
+            localStorage.setItem('spotify_token', data.access_token);
             console.log('✅ Access token saved to localStorage');
             
-            if (tokenData.refresh_token) {
-              localStorage.setItem('spotify_refresh_token', tokenData.refresh_token);
+            if (data.refresh_token) {
+              localStorage.setItem('spotify_refresh_token', data.refresh_token);
               console.log('✅ Refresh token saved to localStorage');
             }
           } catch (storageError) {
             console.error('❌ Failed to save to localStorage:', storageError);
           }
           
-          // Update store
+          // Update store with tokens AND user data
           update(state => ({
             ...state,
-            accessToken: tokenData.access_token,
-            refreshToken: tokenData.refresh_token || null,
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token || null,
+            user: data.user, // User profile already fetched by backend!
             isAuthenticated: true,
             isLoading: false
           }));
           
-          console.log('✅ Store updated with tokens');
+          console.log('✅ Store updated with tokens and user data');
           
           // Clean up sessionStorage
           sessionStorage.removeItem('spotify_auth_state');
           sessionStorage.removeItem('spotify_code_verifier');
           console.log('🧹 Cleaned up sessionStorage');
           
-          // Fetch user profile
-          console.log('🔄 Fetching user profile...');
-          await get(spotifyAuth).fetchUserProfile(tokenData.access_token);
+          // No need to call fetchUserProfile - we already have user data from backend!
           
         } catch (error: any) {
           console.error('❌ Error in handleAuthMessage:', error);
@@ -235,3 +238,11 @@ function createSpotifyAuthStore() {
 
 // Export singleton instance
 export const spotifyAuth = createSpotifyAuthStore();
+// How It Works:
+// 1.User clicks login → openSpotifyAuth() generates PKCE values
+// 2.Popup opens → User authorizes
+// 3.Callback sends postMessage → handleAuthMessage() receives it
+// 4.Validates state → Gets code verifier from sessionStorage
+// 5.Calls /api/spotify/token → Backend exchanges code + fetches user profile
+// 6.Stores tokens in localStorage → Updates store with user data
+// 7.UI automatically updates via Svelte reactivity ($spotifyAuth)

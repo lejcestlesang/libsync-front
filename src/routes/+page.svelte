@@ -169,92 +169,65 @@
     </div>
 </section>
 
-
-<div class="container">
-  
-  {#if $spotifyAuth.isLoading}
-    <p>Loading...</p>
-  {/if}
-  
-  {#if $spotifyAuth.error}
-    <div class="error">
-      <p>Error: {$spotifyAuth.error}</p>
-      <button on:click={spotifyAuth.clearError}>Dismiss</button>
-    </div>
-  {/if}
-  
-  {#if $spotifyAuth.isAuthenticated && $spotifyAuth.user}
-    <div class="user-info">
-      <p>Welcome, {$spotifyAuth.user.display_name}!</p>
-      <p>Email: {$spotifyAuth.user.email}</p>
-      <button on:click={spotifyAuth.logout}>Logout</button>
-    </div>
-  {:else}
-    <button on:click={handleSpotifyLogin}>
-      Login with Spotify
-    </button>
-  {/if}
-</div>
-
-<div class="container">
-  <h1>Welcome to LibSync</h1>
-  
-  <!-- Loading State -->
-  {#if $spotifyAuth.isLoading}
-    <div class="loading">
-      <p>Loading...</p>
-    </div>
-  {/if}
-  
-  <!-- Error State -->
-  {#if $spotifyAuth.error}
-    <div class="error">
-      <p>❌ Error: {$spotifyAuth.error}</p>
-      <button on:click={spotifyAuth.clearError}>Dismiss</button>
-    </div>
-  {/if}
-  
-  <!-- Authenticated State - Display User Info -->
-  {#if $spotifyAuth.isAuthenticated && $spotifyAuth.user}
-    <div class="user-card">
-      <h2>✅ Authentication Successful!</h2>
-      
-      {#if $spotifyAuth.user.images && $spotifyAuth.user.images[0]}
-        <img 
-          src={$spotifyAuth.user.images[0].url} 
-          alt={$spotifyAuth.user.display_name}
-          class="user-avatar"
-        />
-      {/if}
-      
-      <div class="user-info">
-        <p><strong>Name:</strong> {$spotifyAuth.user.display_name}</p>
-        <p><strong>Email:</strong> {$spotifyAuth.user.email}</p>
-        <p><strong>Spotify ID:</strong> {$spotifyAuth.user.id}</p>
+<!-- Spotify Auth Status Section -->
+<section class="bg-primary py-12">
+  <div class="container mx-auto">
+    {#if $spotifyAuth.isLoading}
+      <div class="text-center">
+        <p class="text-primary-foreground text-xl">Loading...</p>
       </div>
-      
-      <div class="token-info">
-        <p><strong>Access Token:</strong> <code>{$spotifyAuth.accessToken?.substring(0, 20)}...</code></p>
-        {#if $spotifyAuth.refreshToken}
-          <p><strong>Refresh Token:</strong> <code>{$spotifyAuth.refreshToken.substring(0, 20)}...</code></p>
-        {/if}
+    {/if}
+    
+    {#if $spotifyAuth.error}
+      <div class="bg-red-500/20 border border-red-500 rounded-lg p-4 text-center">
+        <p class="text-red-300 text-xl mb-4">❌ Error: {$spotifyAuth.error}</p>
+        <button 
+          on:click={spotifyAuth.clearError}
+          class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+        >
+          Dismiss
+        </button>
       </div>
-      
-      <button class="logout-btn" on:click={handleLogout}>
-        Logout from Spotify
-      </button>
-    </div>
-  {:else}
-    <!-- Not Authenticated - Show Login Button -->
-    <div class="auth-section">
-      <p>Connect your Spotify account to get started</p>
-      <button class="auth-btn" on:click={handleSpotifyLogin}>
-        <span>🎵</span>
-        Login with Spotify
-      </button>
-    </div>
-  {/if}
-</div>
+    {/if}
+    
+    {#if $spotifyAuth.isAuthenticated && $spotifyAuth.user}
+      <div class="bg-gray-9 backdrop-blur-sm rounded-lg p-8 max-w-2xl mx-auto">
+        <h2 class="text-3xl font-bold text-primary-foreground mb-6 text-center">
+          ✅ Authentication Successful!
+        </h2>
+        
+        <div class="flex flex-col items-center gap-6">
+          {#if $spotifyAuth.user.images && $spotifyAuth.user.images[0]}
+            <img 
+              src={$spotifyAuth.user.images[0].url} 
+              alt={$spotifyAuth.user.display_name}
+              class="w-32 h-32 rounded-full border-4 border-orange-600"
+            />
+          {/if}
+          
+          <div class="text-center space-y-2">
+            <p class="text-2xl font-bold text-primary-foreground">
+              Welcome, {$spotifyAuth.user.display_name}!
+            </p>
+            <p class="text-xl text-primary-foreground/80">
+              📧 {$spotifyAuth.user.email}
+            </p>
+            <p class="text-sm text-primary-foreground/60">
+              Spotify ID: {$spotifyAuth.user.id}
+            </p>
+          </div>
+          
+          <button 
+            class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg transition-transform hover:scale-95"
+            on:click={handleLogout}
+          >
+            Logout from Spotify
+          </button>
+        </div>
+      </div>
+    {/if}
+  </div>
+</section>
 
 <!-- Pain Points Section -->
 <section class="bg-primary py-20">

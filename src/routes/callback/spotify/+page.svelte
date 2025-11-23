@@ -12,9 +12,6 @@
       const code = params.get('code');
       const state = params.get('state');
       
-      console.log('📝 Code from URL:', code?.substring(0, 20) + '...');
-      console.log('📝 State from URL:', state);
-      
       if (!code) {
         throw new Error('No authorization code received');
       }
@@ -26,17 +23,16 @@
         // Send message to parent window
         window.opener.postMessage({
           type: 'spotify_auth_success',
-          code,
+          code: code,
           returnedState: state
         }, window.location.origin);
         
         console.log('✅ Message sent to parent window');
-        
         status = 'Authentication successful! Closing...';
         setTimeout(() => {
           console.log('🔒 Closing popup window');
           window.close();
-        }, 10000);
+        }, 1000);
       } else {
         console.warn('⚠️ No parent window found or parent is closed');
         status = 'Please close this window and try again from the main page';
